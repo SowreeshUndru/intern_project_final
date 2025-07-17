@@ -1,0 +1,92 @@
+
+
+.env
+
+
+# Dependency directories
+node_modules/
+.bower_components/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# OS/system files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE/editor settings
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Build output
+dist/
+build/
+out/
+.next/
+coverage/
+
+# Optional npm cache directory
+.npm/
+
+# TypeScript
+*.tsbuildinfo
+
+# Test coverage
+coverage/
+.nyc_output/
+
+# Local config files
+*.local
+*.secret
+
+# Mac: Application support
+*.swp
+
+# Logs
+*.log
+
+# Git backup files
+*.orig
+
+# Storybook
+.storybook-out/
+storybook-static/
+
+# Firebase/Netlify/Vercel/Other CI
+.firebase/
+.netlify/
+.vercel/
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Misc
+*.tgz
+*.gz
+*.zip
+
+# PM2 logs
+pids/
+logs/
+*.log
+
+# Yarn
+.yarn/
+.yarnrc.yml
+.pnp.*
