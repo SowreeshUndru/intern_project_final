@@ -3,6 +3,7 @@ import Navbar from "../homecomponents/Navbar";
 import axiosinstance from '../config/axios';
 import { usercontext } from '../src/Userprovider';
 import { useNavigate } from 'react-router-dom';
+import { FaTrash } from 'react-icons/fa';
 
 // Convert buffer to base64 string
 function bufferToBase64(buffer) {
@@ -17,32 +18,58 @@ const Response = () => {
     const [userDetails, setUserDetails] = useState("");
     const [lostItems, setLostItems] = useState([]);
     const [foundItems, setFoundItems] = useState([]);
-    const [id, setId] = useState("");
 
     useEffect(() => {
-        axiosinstance.get('/response')
-            .then((res) => {
-                if (res.data.status) {
-                    setUserDetails(res.data.email);
-                    setLostItems(res.data.data.yourLostItems);
-                    setFoundItems(res.data.data.yourFoundItems);
-                }
-            })
-            .catch((err) => {
-                console.log(err);
-            });
+        fetchItems();
     }, []);
+
+    const fetchItems = async () => {
+        try {
+            const res = await axiosinstance.get('/response');
+            if (res.data.status) {
+                setUserDetails(res.data.email);
+                setLostItems(res.data.data.yourLostItems);
+                setFoundItems(res.data.data.yourFoundItems);
+            }
+        } catch (err) {
+            console.log(err);
+        }
+    };
+
+    const handleDelete = async (itemId) => {
+        const confirmed = window.confirm("Are you sure you want to delete this item?");
+        if (!confirmed) return;
+
+        try {
+            await axiosinstance.post("/response/delete", { itemid: itemId });
+            // Refresh the list
+            setLostItems(prev => prev.filter(item => item._id !== itemId));
+            setFoundItems(prev => prev.filter(item => item._id !== itemId));
+        } catch (error) {
+            console.error("Error deleting item:", error);
+        }
+    };
 
     const renderCard = (item, type) => (
         <div
             key={item._id}
-            className="bg-[#013B5C] rounded-xl shadow-lg hover:shadow-blue-600 transition duration-300 p-4 sm:p-6 flex flex-col md:flex-row gap-4 cursor-pointer"
+            className="bg-[#013B5C] rounded-xl shadow-lg hover:shadow-blue-600 transition duration-300 p-4 sm:p-6 flex flex-col md:flex-row gap-4 cursor-pointer relative"
             onClick={() => {
                 setAttr(type);
-                setId(item._id);
                 navigate(`/project/${item._id}`);
             }}
         >
+            {/* Delete icon */}
+            <button
+                className="absolute top-3 right-3 text-red-500 hover:text-red-700 z-10"
+                onClick={(e) => {
+                    e.stopPropagation(); // prevent card click
+                    handleDelete(item._id);
+                }}
+            >
+                <FaTrash size={18} />
+            </button>
+
             <div className="w-full md:w-1/3 flex items-center justify-center">
                 <img
                     src={`data:${item.image.contentType};base64,${bufferToBase64(item.image.data.data)}`}

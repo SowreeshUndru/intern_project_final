@@ -11,24 +11,13 @@ const responseRoute = require("./routes/Response.js");
 const cors = require("cors");
 const itemroute = require("./routes/item.js")
 
-const allowedOrigins = [
-    'http://localhost:5173',
-    'http://10.62.11.165:5173',
-];
-
+const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [];
 connectDB();
 
 app.use(cors({
-    origin: function (origin, callback) {
-        if (!origin || allowedOrigins.includes(origin)) {
-            callback(null, true);
-        } else {
-            callback(new Error('Not allowed by CORS'));
-        }
-    },
+    origin: allowedOrigins,
     credentials: true,
 }));
-
 
 app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: true }));
