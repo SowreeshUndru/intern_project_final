@@ -15,7 +15,7 @@ const Chat = () => {
   const socketRef = useRef(null);
 
   useEffect(() => {
-    socketRef.current = io("http://localhost:3000", {
+    socketRef.current = io(process.env.VITE_API_URL, {
       auth: {
         token: localStorage.getItem("token")
       },
