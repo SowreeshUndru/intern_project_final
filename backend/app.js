@@ -12,12 +12,19 @@ const cors = require("cors");
 const itemroute = require("./routes/item.js")
 
 const allowedOrigins = process.env.ALLOWED_ORIGINS?.split(',') || [];
-connectDB();
 
 app.use(cors({
-    origin: allowedOrigins,
+    origin: function (origin, callback) {
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true,
 }));
+connectDB();
+
 
 app.use(morgan('dev'));
 app.use(express.urlencoded({ extended: true }));
